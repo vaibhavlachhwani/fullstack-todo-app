@@ -19,7 +19,7 @@ public class UserController {
         this.todoService = todoService;
     }
 
-    @GetMapping("/")
+    @GetMapping("")
     public List<User> getAllUsers() {
         return userService.getAllUsers();
     }
