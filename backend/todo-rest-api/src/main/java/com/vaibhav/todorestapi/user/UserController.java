@@ -26,12 +26,22 @@ public class UserController {
 
     @GetMapping("/{id}")
     public User getUserById(@PathVariable int id) {
-        return userService.getUserById(id);
+        User user = userService.getUserById(id);
+
+        if (user == null) {
+            throw new UserNotFoundException("No User found for id : " + id);
+        }
+
+        return user;
     }
 
     @GetMapping("/{id}/todos")
     public List<TodoItem> getUserTodos(@PathVariable int id) {
         User user = userService.getUserById(id);
+
+        if (user == null) {
+            throw new UserNotFoundException("No User found for id : " + id);
+        }
 
         return todoService.findByUser(user);
     }
@@ -39,6 +49,11 @@ public class UserController {
     @PostMapping("/{id}/todos")
     public ResponseEntity<?> createTodo(@PathVariable int id, @RequestBody TodoItem todo) {
         User user = getUserById(id);
+
+        if (user == null) {
+            throw new UserNotFoundException("No User found for id : " + id);
+        }
+
         todo.setUser(user);
 
         TodoItem saved = todoService.save(todo);

@@ -21,7 +21,13 @@ public class TodoController {
 
     @GetMapping("/{id}")
     public TodoItem getTodoById(@PathVariable int id) {
-        return todoService.findById(id);
+        TodoItem todo = todoService.findById(id);
+
+        if (todo == null) {
+            throw new TodoNotFoundException("No Todo Item found for id : " + id);
+        }
+
+        return todo;
     }
 
     @PostMapping
