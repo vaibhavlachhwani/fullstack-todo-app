@@ -41,6 +41,12 @@ public class TodoController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteTodo(@PathVariable int id) {
+        TodoItem todo = todoService.findById(id);
+
+        if (todo == null) {
+            throw new TodoNotFoundException("No Todo Item found for id : " + id);
+        }
+
         todoService.delete(id);
 
         return ResponseEntity
