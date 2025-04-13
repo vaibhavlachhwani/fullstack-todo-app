@@ -71,4 +71,15 @@ public class UserController {
                 .ok()
                 .body(saved);
     }
+
+    @GetMapping("/{username}")
+    public int getUserIdByUsername(@PathVariable String username) {
+        User user = userService.getUserByUsername(username);
+
+        if (user == null) {
+            throw new UserNotFoundException("No User found for username : " + username);
+        }
+
+        return user.getId();
+    }
 }
