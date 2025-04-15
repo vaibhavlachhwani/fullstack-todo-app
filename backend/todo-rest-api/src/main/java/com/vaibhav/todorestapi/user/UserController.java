@@ -80,7 +80,7 @@ public class UserController {
 
     @GetMapping("/{username}/todos/{id}")
     public TodoItem getUserTodoById(@PathVariable String username, @PathVariable int id) {
-        User user = validateUser(username);
+        validateUser(username);
         TodoItem todo = validateTodo(id);
 
         return todo;
@@ -88,7 +88,7 @@ public class UserController {
 
     @DeleteMapping("/{username}/todos/{id}")
     public ResponseEntity<?> deleteUserTodoById(@PathVariable String username, @PathVariable int id) {
-        User user = validateUser(username);
+        validateUser(username);
         TodoItem todo = validateTodo(id);
 
         todoService.delete(todo.getId());
@@ -108,5 +108,17 @@ public class UserController {
         return ResponseEntity
                 .ok()
                 .body(saved);
+    }
+
+    @PutMapping("/{username}/todos/{id}")
+    public ResponseEntity<?> updateUserTodo(@PathVariable String username, @PathVariable int id, @RequestBody TodoItem newTodo) {
+        validateUser(username);
+        validateTodo(id);
+
+        TodoItem updated = todoService.updateTodo(id, newTodo);
+
+        return ResponseEntity
+                .ok()
+                .body(updated);
     }
 }

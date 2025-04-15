@@ -33,4 +33,11 @@ public class TodoService {
     public void delete(int id) {
         todoRepository.deleteById(id);
     }
+
+    public TodoItem updateTodo(int oldTodoId, TodoItem newTodo) {
+        newTodo.setUser(findById(oldTodoId).getUser());
+        delete(oldTodoId);
+
+        return save(newTodo);
+    }
 }
