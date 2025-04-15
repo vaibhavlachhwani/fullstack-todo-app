@@ -2,6 +2,7 @@ package com.vaibhav.todorestapi.exception;
 
 import com.vaibhav.todorestapi.todo.TodoNotFoundException;
 import com.vaibhav.todorestapi.user.UserNotFoundException;
+import com.vaibhav.todorestapi.user.UserTodoAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -33,5 +34,12 @@ public class CustomExceptionHandler extends ResponseEntityExceptionHandler {
         Error error = new Error(LocalDateTime.now(), ex.getMessage(), request.getDescription(true));
 
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(UserTodoAccessException.class)
+    public final ResponseEntity<?> handleUnauthorisedUserTodoAccess(UserTodoAccessException ex, WebRequest request) {
+        Error error = new Error(LocalDateTime.now(), ex.getMessage(), request.getDescription(true));
+
+        return new ResponseEntity<>(error, HttpStatus.FORBIDDEN);
     }
 }

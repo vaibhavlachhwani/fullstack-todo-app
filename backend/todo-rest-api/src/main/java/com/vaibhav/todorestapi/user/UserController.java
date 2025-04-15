@@ -19,7 +19,7 @@ public class UserController {
         this.todoService = todoService;
     }
 
-    private User validateUser(String username) {
+    private User validateUserExists(String username) {
         User user = userService.getUserByUsername(username);
 
         if (user == null) {
@@ -29,7 +29,7 @@ public class UserController {
         return user;
     }
 
-    private TodoItem validateTodo(int id) {
+    private TodoItem validateTodoExists(int id) {
         TodoItem todo = todoService.findById(id);
 
         if (todo == null) {
@@ -37,6 +37,23 @@ public class UserController {
         }
 
         return todo;
+    }
+
+    private void validateUserTodoOwnership(String username, int id) {
+        User user = validateUserExists(username);
+        validateTodoExists(id);
+
+        boolean ownsTodo = false;
+
+        ownsTodo = user.getTodoItems()
+                .stream()
+                .anyMatch(todo -> todo.getId() == id);
+
+        if (!ownsTodo) {
+            throw new UserTodoAccessException(
+                    String.format("User : '%s' cannot access Todo item with ID : %d", username, id)
+            );
+        }
     }
 
     @GetMapping("")
@@ -55,14 +72,14 @@ public class UserController {
 
     @GetMapping("/{username}")
     public User getUserByUsername(@PathVariable String username) {
-        User user = validateUser(username);
+        User user = validateUserExists(username);
 
         return user;
     }
 
     @DeleteMapping("/{username}")
     public ResponseEntity<?> deleteUser(@PathVariable String username) {
-        User user = validateUser(username);
+        User user = validateUserExists(username);
 
         userService.deleteUser(user.getUsername());
 
@@ -73,23 +90,23 @@ public class UserController {
 
     @GetMapping("/{username}/todos")
     public List<TodoItem> getUserTodos(@PathVariable String username) {
-        User user = validateUser(username);
+        User user = validateUserExists(username);
 
         return todoService.findByUser(user);
     }
 
     @GetMapping("/{username}/todos/{id}")
     public TodoItem getUserTodoById(@PathVariable String username, @PathVariable int id) {
-        validateUser(username);
-        TodoItem todo = validateTodo(id);
+        validateUserTodoOwnership(username, id);
+        TodoItem todo = validateTodoExists(id);
 
         return todo;
     }
 
     @DeleteMapping("/{username}/todos/{id}")
     public ResponseEntity<?> deleteUserTodoById(@PathVariable String username, @PathVariable int id) {
-        validateUser(username);
-        TodoItem todo = validateTodo(id);
+        validateUserTodoOwnership(username, id);
+        TodoItem todo = validateTodoExists(id);
 
         todoService.delete(todo.getId());
 
@@ -100,7 +117,7 @@ public class UserController {
 
     @PostMapping("/{username}/todos")
     public ResponseEntity<?> createTodoForUser(@PathVariable String username, @RequestBody TodoItem todo) {
-        User user = validateUser(username);
+        User user = validateUserExists(username);
 
         todo.setUser(user);
         TodoItem saved = todoService.save(todo);
@@ -111,9 +128,10 @@ public class UserController {
     }
 
     @PutMapping("/{username}/todos/{id}")
-    public ResponseEntity<?> updateUserTodo(@PathVariable String username, @PathVariable int id, @RequestBody TodoItem newTodo) {
-        validateUser(username);
-        validateTodo(id);
+    public ResponseEntity<?> updateUserTodo(@PathVariable String username,
+                                            @PathVariable int id,
+                                            @RequestBody TodoItem newTodo) {
+        validateUserTodoOwnership(username, id);
 
         TodoItem updated = todoService.updateTodo(id, newTodo);
 
