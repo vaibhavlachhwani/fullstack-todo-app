@@ -1,8 +1,8 @@
 package com.vaibhav.todorestapi.user;
 
 import com.vaibhav.todorestapi.todo.TodoItem;
+import com.vaibhav.todorestapi.todo.TodoNotFoundException;
 import com.vaibhav.todorestapi.todo.TodoService;
-import org.apache.coyote.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,51 +19,32 @@ public class UserController {
         this.todoService = todoService;
     }
 
-    @GetMapping("")
-    public List<User> getAllUsers() {
-        return userService.getAllUsers();
-    }
-
-    @GetMapping("/{id}")
-    public User getUserById(@PathVariable int id) {
-        User user = userService.getUserById(id);
+    private User validateUser(String username) {
+        User user = userService.getUserByUsername(username);
 
         if (user == null) {
-            throw new UserNotFoundException("No User found for id : " + id);
+            throw new UserNotFoundException("No User found for username : " + username);
         }
 
         return user;
     }
 
-    @GetMapping("/{id}/todos")
-    public List<TodoItem> getUserTodos(@PathVariable int id) {
-        User user = userService.getUserById(id);
+    private TodoItem validateTodo(int id) {
+        TodoItem todo = todoService.findById(id);
 
-        if (user == null) {
-            throw new UserNotFoundException("No User found for id : " + id);
+        if (todo == null) {
+            throw new TodoNotFoundException("No Todo Item found for id : " + id);
         }
 
-        return todoService.findByUser(user);
+        return todo;
     }
 
-    @PostMapping("/{id}/todos")
-    public ResponseEntity<?> createTodo(@PathVariable int id, @RequestBody TodoItem todo) {
-        User user = getUserById(id);
-
-        if (user == null) {
-            throw new UserNotFoundException("No User found for id : " + id);
-        }
-
-        todo.setUser(user);
-
-        TodoItem saved = todoService.save(todo);
-
-        return ResponseEntity
-                .ok()
-                .body(saved);
+    @GetMapping("")
+    public List<User> getAllUsers() {
+        return userService.getAllUsers();
     }
 
-    @PostMapping("/")
+    @PostMapping("")
     public ResponseEntity<?> createUser(@RequestBody User user) {
         User saved = userService.saveUser(user);
 
@@ -73,13 +54,59 @@ public class UserController {
     }
 
     @GetMapping("/{username}")
-    public int getUserIdByUsername(@PathVariable String username) {
-        User user = userService.getUserByUsername(username);
+    public User getUserByUsername(@PathVariable String username) {
+        User user = validateUser(username);
 
-        if (user == null) {
-            throw new UserNotFoundException("No User found for username : " + username);
-        }
+        return user;
+    }
 
-        return user.getId();
+    @DeleteMapping("/{username}")
+    public ResponseEntity<?> deleteUser(@PathVariable String username) {
+        User user = validateUser(username);
+
+        userService.deleteUser(user.getUsername());
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @GetMapping("/{username}/todos")
+    public List<TodoItem> getUserTodos(@PathVariable String username) {
+        User user = validateUser(username);
+
+        return todoService.findByUser(user);
+    }
+
+    @GetMapping("/{username}/todos/{id}")
+    public TodoItem getUserTodoById(@PathVariable String username, @PathVariable int id) {
+        User user = validateUser(username);
+        TodoItem todo = validateTodo(id);
+
+        return todo;
+    }
+
+    @DeleteMapping("/{username}/todos/{id}")
+    public ResponseEntity<?> deleteUserTodoById(@PathVariable String username, @PathVariable int id) {
+        User user = validateUser(username);
+        TodoItem todo = validateTodo(id);
+
+        todoService.delete(todo.getId());
+
+        return ResponseEntity
+                .noContent()
+                .build();
+    }
+
+    @PostMapping("/{username}/todos")
+    public ResponseEntity<?> createTodoForUser(@PathVariable String username, @RequestBody TodoItem todo) {
+        User user = validateUser(username);
+
+        todo.setUser(user);
+        TodoItem saved = todoService.save(todo);
+
+        return ResponseEntity
+                .ok()
+                .body(saved);
     }
 }
