@@ -1,12 +1,15 @@
+import { useEffect } from "react";
 import { useAuth } from "./security/AuthContext";
 
 export default function LogoutComponent() {
   const authContext = useAuth();
   const isAuthenticated = authContext.isAuthenticated;
 
-  if (isAuthenticated) {
-    authContext.logout();
-  }
+  useEffect(() => {
+    if (authContext.isAuthenticated) {
+      authContext.logout();
+    }
+  }, [authContext]);
 
   return (
     <div className="h-screen flex justify-center items-center bg-[url(/src/assets/bg-login.webp)]">

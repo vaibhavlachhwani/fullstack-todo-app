@@ -1,10 +1,8 @@
 export default function TodoItemCard({ todo }) {
-  // const todo = {
-  //   id: 10,
-  //   description: "Creater Todo Card",
-  //   isDone: false,
-  //   dueDate: new Date("December 17, 1995"),
-  // };
+  function toDateObject(dateArray) {
+    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
+    return date;
+  }
 
   return (
     <div className="p-4 bg-slate-200 rounded-lg mb-4 ring ring-gray-300">
@@ -14,12 +12,10 @@ export default function TodoItemCard({ todo }) {
       <p className="font-bold text-red-600 mb-1">
         Due date:{" "}
         <span className="font-normal text-black">
-          {todo.dueDate.toDateString()}
+          {toDateObject(todo.dueDate).toDateString()}
         </span>
       </p>
-      <p className="text-red-600 mb-2">
-        {todo.isDone ? "Completed" : "Pending"}
-      </p>
+      <p className="text-red-600 mb-2">{todo.done ? "Completed" : "Pending"}</p>
       <button
         className="mr-2 py-2 px-4 rounded-md bg-red-600 hover:bg-red-700 
         text-white transition-all duration-300 ease-in-out cursor-pointer"

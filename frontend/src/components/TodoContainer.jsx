@@ -1,50 +1,24 @@
+import { useEffect, useState } from "react";
+import { retrieveAllTodosForUser } from "../services/api/TodoApiService";
+import { useAuth } from "./security/AuthContext";
 import TodoItemCard from "./TodoItemCard";
 
 export default function TodoContainer() {
-  const todos = [
-    {
-      id: 10,
-      description: "Create Todo Card",
-      isDone: false,
-      dueDate: new Date("December 17, 1995"),
-    },
-    {
-      id: 20,
-      description: "Create Todo Container",
-      isDone: true,
-      dueDate: new Date("December 17, 1995"),
-    },
-    {
-      id: 30,
-      description: "Create Todo Page",
-      isDone: false,
-      dueDate: new Date("December 17, 1995"),
-    },
-    {
-      id: 40,
-      description: "Create Todo Page",
-      isDone: false,
-      dueDate: new Date("December 17, 1995"),
-    },
-    {
-      id: 50,
-      description: "Create Todo Page",
-      isDone: false,
-      dueDate: new Date("December 17, 1995"),
-    },
-    {
-      id: 60,
-      description: "Create Todo Page",
-      isDone: false,
-      dueDate: new Date("December 17, 1995"),
-    },
-    {
-      id: 70,
-      description: "Create Todo Page",
-      isDone: false,
-      dueDate: new Date("December 17, 1995"),
-    },
-  ];
+  const authContext = useAuth();
+  const username = authContext.username;
+
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => loadTodos, []);
+
+  function loadTodos() {
+    retrieveAllTodosForUser(username)
+      .then((response) => {
+        setTodos(response.data);
+        console.log("api called");
+      })
+      .catch((error) => console.log(error));
+  }
 
   return (
     <>
