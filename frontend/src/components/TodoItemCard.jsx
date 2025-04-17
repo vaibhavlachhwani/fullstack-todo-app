@@ -12,7 +12,7 @@ export default function TodoItemCard({ todo }) {
       <p className="font-bold text-red-600 mb-1">
         Due date:{" "}
         <span className="font-normal text-black">
-          {toDateObject(todo.dueDate).toDateString()}
+          {new Date(todo.dueDate).toDateString()}
         </span>
       </p>
       <p className="text-red-600 mb-2">{todo.done ? "Completed" : "Pending"}</p>

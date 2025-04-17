@@ -1,5 +1,6 @@
 package com.vaibhav.todorestapi.todo;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.vaibhav.todorestapi.user.User;
 import jakarta.persistence.*;
@@ -22,6 +23,9 @@ public class TodoItem {
     private User user;
 
     private String description;
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
+
     private boolean isDone;
 }
