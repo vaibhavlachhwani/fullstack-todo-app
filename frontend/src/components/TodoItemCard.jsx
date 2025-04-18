@@ -1,7 +1,23 @@
-export default function TodoItemCard({ todo }) {
-  function toDateObject(dateArray) {
-    const date = new Date(dateArray[0], dateArray[1] - 1, dateArray[2]);
-    return date;
+import { useNavigate } from "react-router-dom";
+import { deleteTodoById } from "../services/api/TodoApiService";
+import { useAuth } from "./security/AuthContext";
+
+export default function TodoItemCard({ todo, loadTodos }) {
+  const authContext = useAuth();
+  const username = authContext.username;
+  const navigate = useNavigate();
+
+  function handleDelete(id) {
+    deleteTodoById(username, id)
+      .then(() => {
+        loadTodos();
+        alert(`Deleted Todo with id : ${id}`);
+      })
+      .catch((error) => console.log(error));
+  }
+
+  function handleUpdate(id) {
+    navigate(`/todo/${id}`);
   }
 
   return (
@@ -19,12 +35,14 @@ export default function TodoItemCard({ todo }) {
       <button
         className="mr-2 py-2 px-4 rounded-md bg-red-600 hover:bg-red-700 
         text-white transition-all duration-300 ease-in-out cursor-pointer"
+        onClick={() => handleDelete(todo.id)}
       >
         Delete
       </button>
       <button
         className="ml-2 py-2 px-4 rounded-md bg-white hover:bg-blue-600 
         hover:text-white transition-all duration-150 ease-in-out cursor-pointer"
+        onClick={() => handleUpdate(todo.id)}
       >
         Update
       </button>

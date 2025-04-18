@@ -40,7 +40,7 @@ export default function TodoContainer() {
           [scrollbar-width:'none']"
           >
             {todos.map((todo) => (
-              <TodoItemCard todo={todo} key={todo.id} />
+              <TodoItemCard todo={todo} loadTodos={loadTodos} key={todo.id} />
             ))}
           </div>
 
