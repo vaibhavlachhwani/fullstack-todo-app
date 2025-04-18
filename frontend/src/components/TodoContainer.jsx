@@ -2,12 +2,15 @@ import { useEffect, useState } from "react";
 import { retrieveAllTodosForUser } from "../services/api/TodoApiService";
 import { useAuth } from "./security/AuthContext";
 import TodoItemCard from "./TodoItemCard";
+import { useNavigate } from "react-router-dom";
 
 export default function TodoContainer() {
   const authContext = useAuth();
   const username = authContext.username;
 
   const [todos, setTodos] = useState([]);
+
+  const navigate = useNavigate();
 
   useEffect(() => loadTodos, []);
 
@@ -18,6 +21,10 @@ export default function TodoContainer() {
         console.log("api called");
       })
       .catch((error) => console.log(error));
+  }
+
+  function handleAdd() {
+    navigate(`/add-todo`);
   }
 
   return (
@@ -46,8 +53,8 @@ export default function TodoContainer() {
 
           <div className="flex justify-center">
             <button
-              className="my-5 py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-700 
-        text-white transition-all duration-150 ease-in-out cursor-pointer"
+              className="my-5 py-2 px-4 rounded-md bg-blue-600 hover:bg-blue-700 text-white transition-all duration-150 ease-in-out cursor-pointer"
+              onClick={handleAdd}
             >
               Add New Todo
             </button>

@@ -19,3 +19,7 @@ export function deleteTodoById(username, id) {
 export function updateTodo(username, id, todo) {
   return apiClient.put(`/users/${username}/todos/${id}`, todo);
 }
+
+export function addTodo(username, todo) {
+  return apiClient.post(`/users/${username}/todos`, todo);
+}
