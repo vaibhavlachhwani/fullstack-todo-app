@@ -11,9 +11,9 @@ export default function UpdateTodoComponent() {
 
   const [todo, setTodo] = useState({});
 
-  const [description, setDescription] = useState(todo.description);
-  const [dueDate, setDueDate] = useState(todo.dueDate);
-  const [done, setDone] = useState(todo.done);
+  const [description, setDescription] = useState("");
+  const [dueDate, setDueDate] = useState("");
+  const [done, setDone] = useState(false);
 
   const [showError, setShowError] = useState(false);
 

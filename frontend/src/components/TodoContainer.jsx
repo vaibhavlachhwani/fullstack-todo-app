@@ -34,7 +34,7 @@ export default function TodoContainer() {
       bg-cover"
       >
         <div
-          className="my-10 mx-10 py-5 px-10 rounded-xl shadow-2xl h-auto w-full max-w-[800px]
+          className="mb-10 mt-15 mx-10 py-5 px-10 rounded-xl shadow-2xl h-auto w-full max-w-[800px]
        min-w-[500px] bg-white/25 backdrop-blur-xs"
         >
           <h1 className="text-4xl text-center font-bold mb-5 text-white">

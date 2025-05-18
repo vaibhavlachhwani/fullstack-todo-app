@@ -6,7 +6,7 @@ export default function HeaderComponent() {
   const isAuthenticated = authContext.isAuthenticated;
 
   return (
-    <div className="hidden sm:flex sm:justify-center">
+    <div className="absolute top-0 z-10 w-full hidden sm:flex sm:justify-center">
       <nav className="p-2 z-2 bg-black w-full">
         <ul>
           <li

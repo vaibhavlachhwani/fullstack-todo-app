@@ -21,7 +21,7 @@ export default function TodoItemCard({ todo, loadTodos }) {
   }
 
   return (
-    <div className="p-4 bg-slate-200 rounded-lg mb-4 ring ring-gray-300">
+    <div className="p-4 relative bg-slate-200 rounded-lg mb-4 ring ring-gray-300">
       <h3 className="text-xl font-bold text-blue-600 mb-2">
         {todo.description}
       </h3>
