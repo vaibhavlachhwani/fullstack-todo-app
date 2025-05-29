@@ -7,7 +7,6 @@ import { useNavigate } from "react-router-dom";
 export default function TodoContainer() {
   const authContext = useAuth();
   const username = authContext.username;
-  const token = authContext.token;
 
   const [todos, setTodos] = useState([]);
 
@@ -16,7 +15,7 @@ export default function TodoContainer() {
   useEffect(() => loadTodos, []);
 
   function loadTodos() {
-    retrieveAllTodosForUser(username, token)
+    retrieveAllTodosForUser(username)
       .then((response) => {
         setTodos(response.data);
         console.log("api called");

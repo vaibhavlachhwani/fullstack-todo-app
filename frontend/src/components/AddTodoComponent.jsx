@@ -6,8 +6,6 @@ import { useNavigate, useParams } from "react-router-dom";
 export default function AddTodoComponent() {
   const authContext = useAuth();
   const username = authContext.username;
-  const token = authContext.token;
-
   // const [todo, setTodo] = useState({});
 
   const [description, setDescription] = useState("");
@@ -42,7 +40,7 @@ export default function AddTodoComponent() {
   function postTodo() {
     const newTodo = { description, dueDate, done };
 
-    addTodo(username, newTodo, token)
+    addTodo(username, newTodo)
       .then((res) => {
         console.log(res);
         navigate(`/list-todos`);

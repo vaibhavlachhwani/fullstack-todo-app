@@ -8,7 +8,6 @@ export default function UpdateTodoComponent() {
 
   const authContext = useAuth();
   const username = authContext.username;
-  const token = authContext.token;
 
   const [todo, setTodo] = useState({});
 
@@ -21,7 +20,7 @@ export default function UpdateTodoComponent() {
   const navigate = useNavigate();
 
   function loadTodoData() {
-    retrieveTodoById(username, id, token)
+    retrieveTodoById(username, id)
       .then((response) => {
         setTodo(response.data);
         setDescription(response.data.description);
@@ -57,7 +56,7 @@ export default function UpdateTodoComponent() {
   function postTodo() {
     const newTodo = { description, dueDate, done };
 
-    updateTodo(username, id, newTodo, token)
+    updateTodo(username, id, newTodo)
       .then((res) => {
         console.log(res);
         navigate(`/list-todos`);
