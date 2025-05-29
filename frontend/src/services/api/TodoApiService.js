@@ -1,45 +1,41 @@
-import axios from "axios";
+import { apiClient } from "./ApiClient";
 
-const apiClient = axios.create({
-  baseURL: "http://localhost:8080/api",
-});
-
-export function retrieveAllTodosForUser(username) {
-  return apiClient.get(`/users/${username}/todos`, {
+export function retrieveAllTodosForUser(username, token) {
+  return apiClient.get(`api/users/${username}/todos`, {
     headers: {
-      Authorization: "Basic YWxpY2U6MTIz",
+      Authorization: token,
     },
   });
 }
 
-export function retrieveTodoById(username, id) {
-  return apiClient.get(`/users/${username}/todos/${id}`, {
+export function retrieveTodoById(username, id, token) {
+  return apiClient.get(`api/users/${username}/todos/${id}`, {
     headers: {
-      Authorization: "Basic YWxpY2U6MTIz",
+      Authorization: token,
     },
   });
 }
 
-export function deleteTodoById(username, id) {
-  return apiClient.delete(`/users/${username}/todos/${id}`, {
+export function deleteTodoById(username, id, token) {
+  return apiClient.delete(`api/users/${username}/todos/${id}`, {
     headers: {
-      Authorization: "Basic YWxpY2U6MTIz",
+      Authorization: token,
     },
   });
 }
 
-export function updateTodo(username, id, todo) {
-  return apiClient.put(`/users/${username}/todos/${id}`, todo, {
+export function updateTodo(username, id, todo, token) {
+  return apiClient.put(`api/users/${username}/todos/${id}`, todo, {
     headers: {
-      Authorization: "Basic YWxpY2U6MTIz",
+      Authorization: token,
     },
   });
 }
 
-export function addTodo(username, todo) {
-  return apiClient.post(`/users/${username}/todos`, todo, {
+export function addTodo(username, todo, token) {
+  return apiClient.post(`api/users/${username}/todos`, todo, {
     headers: {
-      Authorization: "Basic YWxpY2U6MTIz",
+      Authorization: token,
     },
   });
 }

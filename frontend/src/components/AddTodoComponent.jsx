@@ -1,15 +1,12 @@
 import { useEffect, useState } from "react";
-import {
-  addTodo,
-  retrieveTodoById,
-  updateTodo,
-} from "../services/api/TodoApiService";
+import { addTodo } from "../services/api/TodoApiService";
 import { useAuth } from "./security/AuthContext";
 import { useNavigate, useParams } from "react-router-dom";
 
 export default function AddTodoComponent() {
   const authContext = useAuth();
   const username = authContext.username;
+  const token = authContext.token;
 
   // const [todo, setTodo] = useState({});
 
@@ -20,19 +17,6 @@ export default function AddTodoComponent() {
   const [showError, setShowError] = useState(false);
 
   const navigate = useNavigate();
-
-  // function loadTodoData() {
-  //   retrieveTodoById(username, id)
-  //     .then((response) => {
-  //       setTodo(response.data);
-  //       setDescription(response.data.description);
-  //       setDueDate(response.data.dueDate);
-  //       setDone(response.data.done);
-  //     })
-  //     .catch((error) => console.log(error));
-  // }
-
-  // useEffect(() => loadTodoData(), []);
 
   function handleDescriptionChange(event) {
     setDescription(event.target.value);
@@ -58,7 +42,7 @@ export default function AddTodoComponent() {
   function postTodo() {
     const newTodo = { description, dueDate, done };
 
-    addTodo(username, newTodo)
+    addTodo(username, newTodo, token)
       .then((res) => {
         console.log(res);
         navigate(`/list-todos`);
@@ -88,6 +72,7 @@ export default function AddTodoComponent() {
                 className="daisy-input input-primary bg-base-100 border-base-300 w-full"
                 type="text"
                 placeholder="New description"
+                id="description"
                 value={description}
                 onChange={handleDescriptionChange}
                 required
@@ -99,7 +84,8 @@ export default function AddTodoComponent() {
               <input
                 className="daisy-input input-primary bg-base-100 border border-base-300 w-1/2"
                 type="date"
-                placeholder="New description"
+                placeholder=""
+                id="dueDate"
                 value={dueDate}
                 onChange={handleDueDateChange}
                 required
@@ -111,7 +97,8 @@ export default function AddTodoComponent() {
               <input
                 className="daisy-checkbox checkbox-primary bg-base-100 border border-base-300"
                 type="checkbox"
-                placeholder="New description"
+                placeholder=""
+                id="isCompleted?"
                 checked={done}
                 onChange={handleIsDoneChange}
               />

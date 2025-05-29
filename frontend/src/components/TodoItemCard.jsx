@@ -5,10 +5,12 @@ import { useAuth } from "./security/AuthContext";
 export default function TodoItemCard({ todo, loadTodos }) {
   const authContext = useAuth();
   const username = authContext.username;
+  const token = authContext.token;
+
   const navigate = useNavigate();
 
   function handleDelete(id) {
-    deleteTodoById(username, id)
+    deleteTodoById(username, id, token)
       .then(() => {
         loadTodos();
         alert(`Deleted Todo with id : ${id}`);

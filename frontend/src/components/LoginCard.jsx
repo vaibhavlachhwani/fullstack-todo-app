@@ -18,8 +18,8 @@ export default function LoginCard() {
     setPassword(event.target.value);
   }
 
-  function handleSubmit(event) {
-    if (!authContext.login(username, password)) {
+  async function handleSubmit(event) {
+    if (!(await authContext.login(username, password))) {
       setShowAuthError(true);
     } else {
       navigate(`/welcome`);
